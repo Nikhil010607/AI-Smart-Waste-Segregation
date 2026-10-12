@@ -1,8 +1,11 @@
 
+dataset/
+waste_model.h5
+test.jpg
+static/uploads/*
+!static/uploads/.gitkeep
 __pycache__/
 *.py[cod]
 .venv/
 venv/
 .env
-static/uploads/*
-!static/uploads/.gitkeep
