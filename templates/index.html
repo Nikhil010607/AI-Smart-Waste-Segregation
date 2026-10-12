@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSort AI | Smart Waste Classification</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green: #178653;
+            --green-dark: #0d5137;
+            --green-light: #e9f7ee;
+            --text: #18352a;
+            --muted: #718078;
+            --border: #e5eee8;
+            --white: #ffffff;
+            --bg: #f7faf7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 17px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            background: var(--green);
+            color: white;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            font-size: 24px;
+        }
+
+        .brand-name {
+            font-family: 'Manrope', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .brand-name span {
+            color: var(--green);
+        }
+
+        .brand-caption {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .status {
+            background: #e9f7ee;
+            color: #167347;
+            padding: 9px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .hero {
+            max-width: 1100px;
+            margin: auto;
+            padding: 57px 24px 35px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--green-light);
+            color: var(--green);
+            border: 1px solid #d3eddd;
+            border-radius: 30px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 21px;
+        }
+
+        h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: clamp(34px, 5vw, 53px);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.15;
+        }
+
+        h1 span {
+            color: var(--green);
+        }
+
+        .hero p {
+            max-width: 600px;
+            margin: 16px auto 0;
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .main {
+            max-width: 1100px;
+            padding: 0 24px 65px;
+            margin: auto;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 0.85fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 27px;
+            box-shadow: 0 10px 35px rgba(26, 74, 48, 0.045);
+        }
+
+        .card-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .step {
+            color: var(--green);
+            background: var(--green-light);
+            padding: 7px 10px;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .subtext {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 23px;
+        }
+
+        .dropzone {
+            border: 2px dashed #b9d9c5;
+            border-radius: 17px;
+            background: #f8fcf9;
+            padding: 27px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s ease;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dropzone:hover,
+        .dropzone.dragging {
+            border-color: var(--green);
+            background: #edf8f0;
+        }
+
+        .upload-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 17px;
+            background: #e1f3e7;
+            display: grid;
+            place-items: center;
+            font-size: 27px;
+            margin-bottom: 15px;
+        }
+
+        .dropzone strong {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .dropzone p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .browse {
+            display: inline-block;
+            color: var(--green);
+            font-weight: 800;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .file-types {
+            margin-top: 13px;
+            color: #87958c;
+            font-size: 11px;
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        .preview {
+            display: none;
+            margin-top: 17px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 12px;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .preview img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .preview-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .preview-info strong {
+            display: block;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .preview-info p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .remove-btn {
+            background: #fff0ed;
+            border: 0;
+            color: #c14e3c;
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .classify-btn {
+            border: 0;
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px 18px;
+            border-radius: 12px;
+            color: white;
+            background: var(--green);
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 7px 18px rgba(23, 134, 83, 0.16);
+        }
+
+        .classify-btn:hover {
+            background: var(--green-dark);
+            transform: translateY(-1px);
+        }
+
+        .classify-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-placeholder {
+            height: calc(100% - 50px);
+            min-height: 285px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #f8fbf8;
+            border: 1px solid #edf2ed;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .result-icon {
+            width: 78px;
+            height: 78px;
+            background: #e5f4e9;
+            border-radius: 24px;
+            display: grid;
+            place-items: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .result-placeholder h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .result-placeholder p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+            max-width: 260px;
+        }
+
+        .result-content {
+            text-align: center;
+        }
+
+        .result-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 8px 0 20px;
+            background: #f0f4f0;
+        }
+
+        .success-label {
+            display: inline-block;
+            background: var(--green-light);
+            color: var(--green);
+            padding: 7px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .result-category {
+            font-family: 'Manrope', sans-serif;
+            font-size: 30px;
+            font-weight: 800;
+            text-transform: capitalize;
+            margin-bottom: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .result-description {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .result-note {
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 12px;
+            background: #f1f8f2;
+            text-align: left;
+            color: #376448;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .error {
+            background: #fff0ed;
+            color: #a33b2e;
+            padding: 13px;
+            border-radius: 10px;
+            margin-top: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .categories-section {
+            margin-top: 36px;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 15px;
+            margin-bottom: 17px;
+        }
+
+        .section-title h2 {
+            font-size: 21px;
+        }
+
+        .section-title p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 13px;
+        }
+
+        .category {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px 8px;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .category:hover {
+            transform: translateY(-3px);
+            border-color: #a9d7b8;
+        }
+
+        .category-emoji {
+            font-size: 28px;
+            margin-bottom: 11px;
+        }
+
+        .category strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .category small {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        .steps-section {
+            margin-top: 34px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .mini-card {
+            display: flex;
+            gap: 13px;
+            align-items: flex-start;
+            background: white;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .mini-icon {
+            background: var(--green-light);
+            width: 39px;
+            height: 39px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            font-size: 19px;
+        }
+
+        .mini-card strong {
+            font-size: 13px;
+        }
+
+        .mini-card p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+            margin-top: 6px;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 25px 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        footer strong {
+            color: var(--green-dark);
+        }
+
+        @media (max-width: 850px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .steps-section {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding-top: 42px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 14px 5%;
+            }
+
+            .brand-name {
+                font-size: 17px;
+            }
+
+            .status {
+                font-size: 10px;
+                padding: 8px;
+            }
+
+            .hero {
+                padding: 40px 20px 28px;
+            }
+
+            h1 {
+                letter-spacing: -1.3px;
+            }
+
+            .main {
+                padding: 0 15px 40px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 17px;
+            }
+
+            .category-grid {
+                gap: 8px;
+            }
+
+            .category {
+                padding: 16px 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        <div class="brand-icon">♻</div>
+        <div>
+            <div class="brand-name">EcoSort <span>AI</span></div>
+            <div class="brand-caption">SMART WASTE CLASSIFICATION</div>
+        </div>
+    </div>
+    <div class="status">● AI CLASSIFIER</div>
+</header>
+
+<section class="hero">
+    <div class="eyebrow">🌱 AI-POWERED SUSTAINABILITY</div>
+    <h1>Give Waste a <span>Second Life.</span></h1>
+    <p>
+        Identify waste in seconds using artificial intelligence.
+        Upload an image and let our deep learning model help you
+        identify the right waste category.
+    </p>
+</section>
+
+<main class="main">
+
+    <div class="workspace">
+
+        <!-- IMAGE UPLOAD -->
+        <section class="card">
+            <div class="card-heading">
+                <h2>Upload your waste</h2>
+                <span class="step">STEP 01</span>
+            </div>
+            <p class="subtext">
+                Select a clear image of a single waste item for classification.
+            </p>
+
+            <form method="POST" enctype="multipart/form-data" id="uploadForm">
+
+                <label class="dropzone" id="dropzone" for="imageInput">
+                    <div class="upload-icon">📤</div>
+                    <strong>Drop your image here</strong>
+                    <p>or <span class="browse">browse files</span> from your device</p>
+                    <div class="file-types">JPG, JPEG, PNG · Maximum 10 MB</div>
+                </label>
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    name="image"
+                    accept="image/jpeg,image/png,image/jpg"
+                    required
+                >
+
+                <div class="preview" id="preview">
+                    <img id="previewImage" src="" alt="Selected waste">
+                    <div class="preview-info">
+                        <strong id="fileName">Selected image</strong>
+                        <p id="fileSize"></p>
+                    </div>
+                    <button type="button" class="remove-btn" id="removeBtn">
+                        Remove
+                    </button>
+                </div>
+
+                <button type="submit" class="classify-btn" id="classifyBtn">
+                    ✨ &nbsp; Classify Waste
+                </button>
+
+                {% if error %}
+                <div class="error">{{ error }}</div>
+                {% endif %}
+
+            </form>
+        </section>
+
+        <!-- CLASSIFICATION RESULT -->
+        <section class="card">
+            <div class="card-heading">
+                <h2>Classification result</h2>
+                <span class="step">STEP 02</span>
+            </div>
+            <p class="subtext">
+                Your AI prediction will appear here after image processing.
+            </p>
+
+            {% if prediction %}
+            <div class="result-content">
+                {% if image_path %}
+                <img
+                    class="result-image"
+                    src="{{ url_for('static', filename=image_path) }}"
+                    alt="Classified waste image"
+                >
+                {% endif %}
+
+                <div class="success-label">✓ ANALYSIS COMPLETE</div>
+                <div class="result-category">{{ prediction }}</div>
+                <p class="result-description">
+                    The AI model classified your uploaded image into this
+                    waste category.
+                </p>
+                <div class="result-note">
+                    <strong>♻ Disposal tip</strong><br>
+                    Check your local waste collection guidelines for the
+                    correct way to dispose of or recycle this item.
+                </div>
+            </div>
+            {% else %}
+            <div class="result-placeholder">
+                <div class="result-icon">🔍</div>
+                <h3>Waiting for your image</h3>
+                <p>
+                    Upload a waste image and click
+                    <strong>Classify Waste</strong> to see your prediction.
+                </p>
+            </div>
+            {% endif %}
+        </section>
+
+    </div>
+
+    <!-- SUPPORTED CLASSES -->
+    <section class="categories-section">
+        <div class="section-title">
+            <div>
+                <h2>What can EcoSort identify?</h2>
+                <p>Six waste categories supported by your trained CNN model.</p>
+            </div>
+        </div>
+
+        <div class="category-grid">
+            <div class="category">
+                <div class="category-emoji">📦</div>
+                <strong>Cardboard</strong>
+                <small>Paper packaging</small>
+            </div>
+            <div class="category">
+                <div class="category-emoji">🍾</div>
+                <strong>Glass</strong>
+                <small>Bottles and jars</small>
+            </div>
+            <div class="category">
+                <div class="category-emoji">🥫</div>
+                <strong>Metal</strong>
+                <small>Cans and metals</small>
+            </div>
+            <div class="category">
+                <div class="category-emoji">📰</div>
+                <strong>Paper</strong>
+                <small>Paper products</small>
+            </div>
+            <div class="category">
+                <div class="category-emoji">🧴</div>
+                <strong>Plastic</strong>
+                <small>Plastic containers</small>
+            </div>
+            <div class="category">
+                <div class="category-emoji">🗑️</div>
+                <strong>Trash</strong>
+                <small>Other waste</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="steps-section">
+        <div class="mini-card">
+            <div class="mini-icon">📸</div>
+            <div>
+                <strong>01. Upload Image</strong>
+                <p>Choose a waste image from your device.</p>
+            </div>
+        </div>
+        <div class="mini-card">
+            <div class="mini-icon">🧠</div>
+            <div>
+                <strong>02. AI Analysis</strong>
+                <p>Your trained CNN processes the image and predicts a class.</p>
+            </div>
+        </div>
+        <div class="mini-card">
+            <div class="mini-icon">🌍</div>
+            <div>
+                <strong>03. View Result</strong>
+                <p>See the predicted category and follow local disposal guidance.</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <strong>EcoSort AI</strong> · AI Smart Waste Segregation System<br>
+    Powered by Python, TensorFlow, CNN, OpenCV and Flask<br>
+    <span>Building a cleaner, more sustainable future.</span>
+</footer>
+
+<script>
+    const input = document.getElementById("imageInput");
+    const dropzone = document.getElementById("dropzone");
+    const preview = document.getElementById("preview");
+    const previewImage = document.getElementById("previewImage");
+    const fileName = document.getElementById("fileName");
+    const fileSize = document.getElementById("fileSize");
+    const removeBtn = document.getElementById("removeBtn");
+    const form = document.getElementById("uploadForm");
+    const classifyBtn = document.getElementById("classifyBtn");
+
+    let previewURL = null;
+
+    function showFile(file) {
+        if (!file) return;
+
+        const allowedTypes = ["image/jpeg", "image/png"];
+
+        if (!allowedTypes.includes(file.type)) {
+            alert("Please select a JPG, JPEG, or PNG image.");
+            input.value = "";
+            return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            alert("The image must be smaller than 10 MB.");
+            input.value = "";
+            return;
+        }
+
+        if (previewURL) {
+            URL.revokeObjectURL(previewURL);
+        }
+
+        previewURL = URL.createObjectURL(file);
+        previewImage.src = previewURL;
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / 1024).toFixed(1) + " KB";
+
+        preview.style.display = "flex";
+        dropzone.style.display = "none";
+        classifyBtn.disabled = false;
+    }
+
+    input.addEventListener("change", function () {
+        showFile(this.files[0]);
+    });
+
+    ["dragenter", "dragover"].forEach(function (eventName) {
+        dropzone.addEventListener(eventName, function (event) {
+            event.preventDefault();
+            dropzone.classList.add("dragging");
+        });
+    });
+
+    ["dragleave", "drop"].forEach(function (eventName) {
+        dropzone.addEventListener(eventName, function (event) {
+            event.preventDefault();
+            dropzone.classList.remove("dragging");
+        });
+    });
+
+    dropzone.addEventListener("drop", function (event) {
+        const file = event.dataTransfer.files[0];
+        if (!file) return;
+
+        const transfer = new DataTransfer();
+        transfer.items.add(file);
+        input.files = transfer.files;
+        showFile(file);
+    });
+
+    removeBtn.addEventListener("click", function () {
+        input.value = "";
+        preview.style.display = "none";
+        dropzone.style.display = "flex";
+
+        if (previewURL) {
+            URL.revokeObjectURL(previewURL);
+            previewURL = null;
+        }
+
+        previewImage.src = "";
+        classifyBtn.disabled = false;
+    });
+
+    form.addEventListener("submit", function (event) {
+        if (!input.files.length) {
+            event.preventDefault();
+            alert("Please select an image first.");
+            return;
+        }
+
+        classifyBtn.disabled = true;
+        classifyBtn.textContent = "⏳  Analyzing image...";
+    });
+</script>
+
+</body>
+</html>
